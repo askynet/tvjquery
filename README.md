@@ -12,4 +12,4 @@ eg. BASECOIN : BTC
     INTERVAL : 15
 
 ```
-
+supported interval : ['1', '5', '15', '60', '240', 'D']
