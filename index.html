@@ -26,11 +26,15 @@
 		<script type="text/javascript">
 			
 			var url = new URL(window.location.href);
+			var urlLink=window.location.href;
+			console.log(urlLink);
+			console.log(getParameterByName(urlLink));
 			var baseCoin = url.searchParams.get("base");
 			var toCoin = url.searchParams.get("to");
 			var domain = url.searchParams.get("domain");
 			var interval = url.searchParams.get("interval");
 			var timestamp=url.searchParams.get("timestamp");
+			 
 			if(to!=undefined&&base!=undefined&&domain!=undefined&&domain!=''&&timestamp!=null){
 				interval=(interval!=undefined)?interval:'15';
 				$('#alertBox').hide();
@@ -80,7 +84,7 @@
 
 	<body style="margin:0px;">
 	    <div class="alert alert-danger" id="alertBox" >
-					<strong>Opps! </strong> Please provide `to` and `base` currency.
+					<strong>Opps! </strong> Please provide `base`,`to`,`domain`,`timestamp` and `interval (optional)` currency.
 		</div>
 		<div id="tv_chart_container"></div>
 	</body>
