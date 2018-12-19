@@ -1,23 +1,27 @@
 
 const { $ } = window;
+var to ='ETH';
+var base='BTC';
 
-var connection = $.hubConnection('http://demo6api.modulusexchange.com');
-    var dataTickerHubProxy = connection.createHubProxy('dataTickerHub');
+var connection = $.hubConnection('https://api.modulusexchange.com');
+var dataTickerHubProxy = connection.createHubProxy('dataTickerHub');
 
-    // receives broadcast messages from a hub function, called "broadcastMessage"
-    dataTickerHubProxy.on('chartTicker', function(message) {
-        console.log(message);
-    });
-    dataTickerHubProxy.on('pushDataTickerMatched', data => {
-        console.log(data);
-        //updateVolume(data.Data);
-    })
 
-    connection.start().done(function () {
-   console.log('\n-------------------------   Start the connection to the dataTickerHub    ---------------------------');
-   dataTickerHubProxy.invoke('joinGroup', to, base);
-   dataTickerHubProxy.invoke('subscribeToChartTicker', to, base,1440);
+dataTickerHubProxy.on('chartTicker', function (data) {
+   console.log('\n--- gets chart data ----');
+   console.table(data);
 });
+dataTickerHubProxy.on('pushDataTickerMatched', function (data) {
+  console.log('\n--- gets chart data ----');
+  console.table(data);
+});
+connection.start().done(function () {
+   console.log('\n-------------------------   Start the connection to the dataTickerHub    ---------------------------');
+   dataTickerHubProxy.invoke('joinGroup', 'ETH', 'BTC');
+   dataTickerHubProxy.invoke('subscribeToChartTicker', 'ETH', 'BTC',1440);
+//    dataTickerHubProxy.invoke('subscribeTo_PendingOrderData', 'USER_UNIQUE_ACCESS_TOKEN', 'TRADE_CURRENCY', 'MARKET_CURRENCY');
+});
+
 
 let subscription = {};
 window.dataTickerHubProxy = dataTickerHubProxy;
@@ -25,19 +29,20 @@ window.dataTickerHubProxy = dataTickerHubProxy;
 const streamProvider = {
   subscribeBars: (symbolInfo, resolution, updateCb, uid, resetCache) => {
     const [baseCurrency, quoteCurrency] = symbolInfo.name.split('/');
-    const lastBar = _.get(historyProvider, `history.${symbolInfo.name}.lastBar`, {
-      time: moment().startOf('m').valueOf(),
-      open: 0,
-      close: 0,
-      hight: 0,
-      low: 0,
-      volume: 0
-    })
+    const lastBar={};
+    // const lastBar = _.get(historyProvider, `history.${symbolInfo.name}.lastBar`, {
+    //   time: moment().startOf('m').valueOf(),
+    //   open: 0,
+    //   close: 0,
+    //   hight: 0,
+    //   low: 0,
+    //   volume: 0
+    // })
 
     dataTickerHubProxy.invoke(
       'subscribeToChartTicker',
-      baseCurrency,
-      quoteCurrency,
+      'BTC',
+      'ETH',
       1,
     );
 
@@ -85,7 +90,7 @@ dataTickerHubProxy.on('pushDataTickerMatched', data => {
   updateVolume(data.Data);
 })
 
-export const updateVolume = ticker => {
+const updateVolume = ticker => {
   if (!_.isEmpty(subscription)) {
     let lastBar = subscription.lastBar;
 

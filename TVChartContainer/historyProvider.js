@@ -26,48 +26,50 @@ const historyProvider = {
     //   limit: limit ? limit : 1000,
     // });
 
-    const bars = dataJson.map(bar => {
-      delete bar.ID;
-      var time=new Date(bar[0]);
-      // return {
-      //   ...bar,
-      //   time: time.getMinutes(),
-      // }
-      return {
-        time: bar[0], //TradingView requires bar time in ms
-        low: bar[1],
-        high: bar[2],
-        open: bar[3],
-        close: bar[4],
-        volume: bar[5] 
-      }
-    })
-    return bars;
-    // const queryString = "baseCurrency=BTC&quoteCurrency=ETH&interval=60&limit=200&timestamp=1545111760";
-    // var data;
-    // var urlApi = `https://demo6api.modulusexchange.com//market/get-chart-data?${queryString}`;
-    // $.ajax({
-    //   url: urlApi,
-    //   success: function (result) {
-    //     if (data.data.length) {
-    //       const bars = data.data.map(bar => {
-    //         delete bar.ID;
-
-    //         return {
-    //           ...bar,
-    //           time: moment(bar.time).valueOf(),
-    //         }
-    //       })
-
-    //       if (first) {
-    //         const lastBar = bars[0];
-    //         history[symbolInfo.name] = { lastBar }
-    //       }
-
-    //       return bars.reverse();
-    //     }
+    // const bars = dataJson.map(bar => {
+    //   delete bar.ID;
+    //   var time=new Date(bar[0]);
+    //   // return {
+    //   //   ...bar,
+    //   //   time: time.getMinutes(),
+    //   // }
+    //   return {
+    //     time: bar[0], //TradingView requires bar time in ms
+    //     low: bar[1],
+    //     high: bar[2],
+    //     open: bar[3],
+    //     close: bar[4],
+    //     volume: bar[5] 
     //   }
-    // });
+    // })
+    // return bars;
+    //const queryString = "baseCurrency=BTC&quoteCurrency=ETH&interval=60&limit=200&timestamp=1545111760";
+    const queryString = "baseCurrency="+baseCoin+"&quoteCurrency="+toCoin+"&interval=5&limit=1000&timestamp="+timestamp;
+    var data;
+    var urlApi = domain+`/market/get-chart-data?${queryString}`;
+    $.ajax({
+      url: urlApi,
+      success: function (data) {
+        console.log('===============API RESULT================');
+        console.log(data);
+        if (data.data.length) {
+          const bars = data.data.map(bar => {
+            delete bar.ID;
+
+            return bar;
+          })
+
+          // if (first) {
+          //   const lastBar = bars[0];
+          //   history[symbolInfo.name] = { lastBar }
+          // }
+
+         // return bars.reverse();
+        }
+      },error(err){
+        console.log(err);
+      }
+    });
 
 
   },

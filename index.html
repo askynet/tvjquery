@@ -8,57 +8,89 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
 		<meta http-equiv="X-UA-Compatible" content="IE=Edge">
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+		<script src="https://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.2.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.core.js"></script>
 		<script type="text/javascript" src="charting_library/charting_library.min.js"></script>
 		<script type="text/javascript" src="datafeeds/udf/dist/polyfills.js"></script>
 		<script type="text/javascript" src="datafeeds/udf/dist/bundle.js"></script>
 		<script type="text/javascript" src="TVChartContainer/datajson.js"></script>
 		<script type="text/javascript" src="TVChartContainer/streamProvider.js"></script>
-		<script src="https://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.2.min.js"></script>
 		<script type="text/javascript" src="TVChartContainer/historyProvider.js"></script>
         <script type="text/javascript" src="TVChartContainer/datafeed.js"></script>
-        
-
+		
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		
 		<script type="text/javascript">
+			
+			var url = new URL(window.location.href);
+			var baseCoin = url.searchParams.get("base");
+			var toCoin = url.searchParams.get("to");
+			var domain = url.searchParams.get("domain");
+			var timestamp=url.searchParams.get("timestamp");
+			if(to!=undefined&&base!=undefined&&domain!=undefined&&domain!=''&&timestamp!=null){
+				$('#alertBox').hide();
+				console.log($('#alertBox'));
+				TradingView.onready(function()
+				{
+					var widget = window.tvWidget = new TradingView.widget({
+						// debug: true, // uncomment this line to see Library errors and warnings in the console
+						fullscreen: true,
+						symbol: baseCoin+'/'+toCoin,
+						interval: '5',
+						container_id: "tv_chart_container",
 
+						//	BEWARE: no trailing slash is expected in feed URL
+						datafeed: datafeed,
+						library_path: "charting_library/",
+						locale: getParameterByName('lang') || "en",
+						has_intraday: false,
+
+						disabled_features: ["use_localstorage_for_settings"],
+						enabled_features: ["study_templates"],
+						charts_storage_url: 'http://saveload.tradingview.com',
+						charts_storage_api_version: "1.1",
+						client_id: 'tradingview.com',
+						user_id: 'public_user_id',
+						theme: getParameterByName('theme'),
+					});
+				});
+			 }else{
+			 	//alert('Please provide to and base currency');
+			 	$('.alert-danger').show();
+			}
 			function getParameterByName(name) {
 				name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
 				var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
 					results = regex.exec(location.search);
 				return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 			}
-			console.log('HERE IS DATAFEED');
-			console.log(datafeed);
-            console.log('json data',dataJson);                          
-			TradingView.onready(function()
-			{
-				var widget = window.tvWidget = new TradingView.widget({
-					// debug: true, // uncomment this line to see Library errors and warnings in the console
-					fullscreen: true,
-					symbol: 'AAPL',
-					interval: 'D',
-					container_id: "tv_chart_container",
+			//console.log('HERE IS DATAFEED');
+			//console.log(datafeed);
+           // console.log('json data',dataJson); 
 
-					//	BEWARE: no trailing slash is expected in feed URL
-					datafeed: datafeed,
-					library_path: "charting_library/",
-					locale: getParameterByName('lang') || "en",
-
-					disabled_features: ["use_localstorage_for_settings"],
-					enabled_features: ["study_templates"],
-					charts_storage_url: 'http://saveload.tradingview.com',
-					charts_storage_api_version: "1.1",
-					client_id: 'tradingview.com',
-					user_id: 'public_user_id',
-					theme: getParameterByName('theme'),
-				});
-			});
+			                        
+			
 
 		</script>
 
 	</head>
 
 	<body style="margin:0px;">
+	    <div class="alert alert-danger" id="alertBox" >
+					<strong>Opps! </strong> Please provide `to` and `base` currency.
+		</div>
 		<div id="tv_chart_container"></div>
 	</body>
-
+	<script>
+		$(document).ready(function(){
+			if(to!=undefined&&base!=undefined&&domain!=undefined&&domain!=''&&timestamp!=null){
+				$('#alertBox').hide();
+			}else{
+				$('#alertBox').show();
+			}
+		})
+	</script>
 </html>
