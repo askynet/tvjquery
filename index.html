@@ -29,8 +29,10 @@
 			var baseCoin = url.searchParams.get("base");
 			var toCoin = url.searchParams.get("to");
 			var domain = url.searchParams.get("domain");
+			var interval = url.searchParams.get("interval");
 			var timestamp=url.searchParams.get("timestamp");
 			if(to!=undefined&&base!=undefined&&domain!=undefined&&domain!=''&&timestamp!=null){
+				interval=(interval!=undefined)?interval:'15';
 				$('#alertBox').hide();
 				console.log($('#alertBox'));
 				TradingView.onready(function()
@@ -39,15 +41,13 @@
 						// debug: true, // uncomment this line to see Library errors and warnings in the console
 						fullscreen: true,
 						symbol: baseCoin+'/'+toCoin,
-						interval: '5',
+						interval: interval,
 						container_id: "tv_chart_container",
 
 						//	BEWARE: no trailing slash is expected in feed URL
 						datafeed: datafeed,
 						library_path: "charting_library/",
 						locale: getParameterByName('lang') || "en",
-						has_intraday: false,
-
 						disabled_features: ["use_localstorage_for_settings"],
 						enabled_features: ["study_templates"],
 						charts_storage_url: 'http://saveload.tradingview.com',

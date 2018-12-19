@@ -89,42 +89,47 @@ var datafeed = {
     console.log('=====getBars running')
     console.log(`Requesting bars between ${new Date(from * 1000).toISOString()} and ${new Date(to * 1000).toISOString()}`)
     try {
-      result = $.ajax({
+        if(apiCall==0){
+          apiCall++;
+          result = $.ajax({
 
-        url: domain+'/market/get-chart-data?baseCurrency='+baseCoin+'&quoteCurrency='+toCoin+'&interval=5&limit=1000&timestamp='+timestamp,
-        type: 'GET',
-        data: {
-        },
-        dataType: 'json',
-        success: function (data) {
-          //                             alert('Data: '+data);
-         // console.log(data)
-          if (data.data.length) {
-            const bars = data.data.map(bar => {
-              delete bar.ID;
-
-              return bar;
-            })
-
-            if (firstDataRequest) {
-              const lastBar = bars[0];
-              history[symbolInfo.name] = { lastBar }
+            url: domain+'/market/get-chart-data?baseCurrency='+baseCoin+'&quoteCurrency='+toCoin+'&interval='+resolution+'&limit=1000&timestamp='+timestamp,
+            type: 'GET',
+            data: {
+            },
+            dataType: 'json',
+            success: function (data) {
+              //                             alert('Data: '+data);
+             // console.log(data)
+              if (data.data.length) {
+                const bars = data.data.map(bar => {
+                  delete bar.ID;
+    
+                  return bar;
+                })
+    
+                if (firstDataRequest) {
+                  const lastBar = bars[0];
+                  history[symbolInfo.name] = { lastBar }
+                }
+                console.log('BARS:' + bars)
+                let newBar = bars.reverse()
+                if (newBar.length) {
+                  onHistoryCallback(newBar, { noData: false })
+                } else {
+                  onHistoryCallback(newBar, { noData: true })
+                }
+              } else {
+                console.log('Data is empty')
+              }
+            },
+            error: function (request, error) {
+              alert("Request: " + JSON.stringify(request));
             }
-            console.log('BARS:' + bars)
-            let newBar = bars.reverse()
-            if (newBar.length) {
-              onHistoryCallback(newBar, { noData: false })
-            } else {
-              onHistoryCallback(newBar, { noData: true })
-            }
-          } else {
-            console.log('Data is empty')
-          }
-        },
-        error: function (request, error) {
-          alert("Request: " + JSON.stringify(request));
+          });
+        }else{
+
         }
-      });
     } catch (error) {
       console.error(error);
     }

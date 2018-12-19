@@ -44,7 +44,7 @@ const historyProvider = {
     // })
     // return bars;
     //const queryString = "baseCurrency=BTC&quoteCurrency=ETH&interval=60&limit=200&timestamp=1545111760";
-    const queryString = "baseCurrency="+baseCoin+"&quoteCurrency="+toCoin+"&interval=5&limit=1000&timestamp="+timestamp;
+    const queryString = "baseCurrency="+baseCoin+"&quoteCurrency="+toCoin+"&interval="+resolution+"&limit=1000&timestamp="+timestamp;
     var data;
     var urlApi = domain+`/market/get-chart-data?${queryString}`;
     $.ajax({

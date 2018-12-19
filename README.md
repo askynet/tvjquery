@@ -3,12 +3,13 @@
 ##View Trade view history
 Open following url in browser
 ```
-https://yourdomainame.com/tvjquery/index.html?base=BASECOIN&to=QUOTECOIN&domain=BASEURL&timestamp=TIMESTAMP
+https://yourdomainame.com/tvjquery/index.html?base=BASECOIN&to=QUOTECOIN&domain=BASEURL&interval=INTERVAL&timestamp=TIMESTAMP
 
 eg. BASECOIN : BTC
     QUOTECOIN : ETH
     BASEURL : https://demo6api.modulusexchange.com
-    TIMESTAMP : 1545207119000
+    TIMESTAMP : 1545207119000,
+    INTERVAL : 15
 
 ```
 
